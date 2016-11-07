@@ -1,9 +1,13 @@
+"""Fichier permettant de trouver tous les partages valables
+d'un collier donné"""
+
 import Collier
 
 def ajout_element(T, e):
-    M = [T[i]+[e] for i in range(len(T))]
-    return M
-
+    liste_ajout_element = [T[i]+[e] for i in range(len(T))]
+    return liste_ajout_element
+    
+    
 def ensemble_partie(S):
 
     if S == []:
