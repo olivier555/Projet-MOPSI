@@ -1,6 +1,10 @@
 """fichier contenant les fonctions permettant
 d'obtenir la liste des partages"""
 
+## Modules importes
+
+from Collier import Collier
+
 
 def ajout_element(liste, element):
     """T est une liste de liste
@@ -33,3 +37,31 @@ def selection_partie(liste_partie, taille):
     une liste contenant seulement les listes de partie de taille taille"""
 
     return [partie for partie in liste_partie if len(partie) == taille]
+
+def partage_partie(partie, taille_collier):
+    """Renvoit le partage du collier de taille_collier
+    correspondant a  la partie partie"""
+
+    partage = []
+    for i in range(taille_collier):
+        if i in partie:
+            partage.append(1)
+        else:
+            partage.append(-1)
+    return partage
+
+
+def liste_partage(taille_collier):
+    """Renvoit tous les partages possibles pour un collier
+    de taille paire taille"""
+
+    assert(taille_collier % 2 == 0)
+    liste_entier = [i for i in range(taille_collier)]
+    liste_parties = ensemble_partie(liste_entier)
+    demi = int(taille_collier / 2)
+    liste_parties_valable = selection_partie(liste_parties, demi)
+    liste_partages = []
+    for partie in liste_parties_valable:
+        partage = partage_partie(partie, taille_collier)
+        liste_partages.append(partage)
+    return liste_partages

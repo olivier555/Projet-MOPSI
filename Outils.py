@@ -1,6 +1,8 @@
 import random
 
 def repartition_perle(nb_perles, nb_types):
+    """Renvoit un nombre de perles aleatoires par types repondant
+    aux donnees du problemes"""
         
     decoupe_aleatoire = []
     moitie = int(nb_perles / 2)
