@@ -5,7 +5,6 @@
 
 import time
 from PyQt4 import QtGui, QtCore
-import IA
 import Collier
 import sys
 
