@@ -1,77 +1,93 @@
-"""Fichier contenant la fonction lambda pour un simplexe
+"""Fichier contenant la fonction lambda pour un vecteur_signe
 ainsi que pour une liste de simlexe"""
 
+## Modules importes
 
-def fonction_m_complet(simplexe):
-    """fonction calculant m d'un simplexe complet (sans 0)
+from Collier import Collier
+import Vecteur_Signe
+import copy
+
+def fonction_m_complet(vecteur_signe):
+    """fonction calculant m d'un vecteur_signe complet (sans 0)
     definit comme le nombre d'alternance entre 0 et 1
-    et de signe le premier element du simplexe"""
+    et de signe le premier element du vecteur_signe"""
 
-    signe = simplexe[0]
+    signe = vecteur_signe.liste[0]
     val_abs = 0
-    for i in range(len(simplexe) - 1):
-        if simplexe[i] != simplexe[i+1]:
+    for i in range(len(vecteur_signe.liste) - 1):
+        if vecteur_signe.liste[i] != vecteur_signe.liste[i+1]:
             val_abs += 1
     return signe * val_abs
 
 
-def fonction_m(simplexe):
-    """fonction calculant m pour tout simplexe definit comme
-    maxabs(m(simplexe_complet)|simplexe inclut dans simplexe complet"""
+def fonction_m(vecteur_signe):
+    """fonction calculant m pour tout vecteur_signe definit comme
+    maxabs(m(vecteur_signe_complet)|vecteur_signe inclut dans vecteur_signe complet"""
+    
+    indice_non_nul = len(vecteur_signe.liste)
 
-    indice_non_nul = 0
-    while simplexe[indice_non_nul] == 0:
+    if 1 in vecteur_signe.liste and -1 in vecteur_signe.liste:
+        indice_non_nul = min(vecteur_signe.liste.index(-1),vecteur_signe.liste.index(1))
+    elif 1 in vecteur_signe.liste:
+        indice_non_nul = vecteur_signe.liste.index(1)
+    elif -1 in vecteur_signe.liste:
+        indice_non_nul = vecteur_signe.liste.index(-1)
+    while indice_non_nul < len(vecteur_signe.liste) and vecteur_signe.liste[indice_non_nul] == 0:
         indice_non_nul += 1
 
-    #Creation de simplexe_complet un simplexe complet contenant simplexe
+
+    #Creation de vecteur_signe_complet un vecteur_signe complet contenant vecteur_signe
     #et ayant le maximum d'alternances possibles
-    simplexe_complet = simplexe
+    liste_copie = copy.deepcopy(vecteur_signe.liste)
 
     for i in range(indice_non_nul - 1, -1, -1):
-        simplexe_complet[i] = - simplexe_complet[i + 1]
+        liste_copie[i] = - liste_copie[i + 1]
 
-    for i in range(indice_non_nul + 1, len(simplexe)):
-        if simplexe_complet[i] == 0:
-            simplexe_complet[i] = - simplexe_complet[i - 1]
+    for i in range(indice_non_nul + 1, len(vecteur_signe.liste)):
+        if liste_copie[i] == 0:
+            liste_copie[i] = - liste_copie[i - 1]
 
-    return fonction_m_complet(simplexe_complet)
+    vecteur_signe_complet = Vecteur_Signe.creer_vecteur_signe(liste_copie)
+
+    return fonction_m_complet(vecteur_signe_complet)
 
 
-def repartition_perles_types(simplexe, collier):
+def repartition_joueurs_types(vecteur_signe, collier):
     """fonction renvoyant une double liste contenant
     le nombre de perles que chaque joueur a par type"""
 
-    liste = [0] * collier.nb_types
-    liste_nb_perles = [liste, liste]
+    liste_joueur_1 = [0] * collier.nb_types
+    liste_joueur_2 = [0] * collier.nb_types
+    liste_perles_joueur = [liste_joueur_1, liste_joueur_2]
     for i in range(collier.nb_perles):
-        if simplexe[i] == 1:
-            liste_nb_perles[0][collier.chaine[i]] += 1
-        if simplexe[i] == -1:
-            liste_nb_perles[-1][collier.chaine[i]] += 1
-    return liste_nb_perles
+        if vecteur_signe.liste[i] == 1:
+            liste_perles_joueur[0][collier.liste[i]] += 1
+        if vecteur_signe.liste[i] == -1:
+            liste_perles_joueur[1][collier.liste[i]] += 1
+    return liste_perles_joueur
 
 
-def fonction_lambda(simplexe, collier):
-    """calcule la fonction lambda d'un simplexe"""
+def fonction_lambda(vecteur_signe, collier):
+    """calcule la fonction lambda d'un vecteur_signe"""
 
-    valeur_m = fonction_m(simplexe)
-
+    valeur_m = fonction_m(vecteur_signe)
+            
     if abs(valeur_m) > collier.nb_types:
-        return valeur_m
+        return  valeur_m
 
-    repartition_perles_type = repartition_perles_types(simplexe, collier)
-    if abs(valeur_m) > collier.nb_types:
-        for i in range(collier.nb_types):
-            moitie = int(collier.repartition[i] / 2)
-            if repartition_perles_type[0][i] > moitie:
-                return i
-            if repartition_perles_type[1][i] > moitie:
-                return - i
+    repartition_perles_types = repartition_joueurs_types(vecteur_signe, collier)
+    #print(repartition_perles_types)
+    for i in range(collier.nb_types):
+        moitie = int(collier.repartition[i] / 2)
+        if repartition_perles_types[0][i] > repartition_perles_types[1][i]:
+            return (i + 1)
+        if repartition_perles_types[1][i] > repartition_perles_types[0][i]:
+            return - (i + 1)
     return 0
 
 
-def fonction_lambda_liste(liste_simplexe, collier):
+def fonction_lambda_liste(liste_vecteur_signe, collier):
     """Renvoit une liste contenant les valeurs de la fonction lambda
-    pour chaque simplexe de la liste"""
+    pour chaque vecteur_signe de la liste"""
 
-    return [fonction_lambda(simplexe, collier) for simplexe in liste_simplexe]
+    return [fonction_lambda(vecteur_signe, collier) for vecteur_signe in liste_vecteur_signe]

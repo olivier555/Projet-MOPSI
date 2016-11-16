@@ -1,13 +1,13 @@
-"""Module contenant tous les outils necessaires pour notre jeu"""
-
 import random
 
 def repartition_perle(nb_perles, nb_types):
-    """Permet de calculer la repartition des perles dans chaque type"""
+    """Renvoit un nombre de perles aleatoires par types repondant
+    aux donnees du problemes"""
         
     decoupe_aleatoire = []
     moitie = int(nb_perles / 2)
     
+
     for i in range (nb_types - 1):
         int_aleatoire = random.randint(1, moitie-1)
         while (int_aleatoire in decoupe_aleatoire):
@@ -19,4 +19,7 @@ def repartition_perle(nb_perles, nb_types):
     for i in range (nb_types - 2):
         repartition.append(2 * (decoupe_aleatoire[i+1] - decoupe_aleatoire[i]))
     repartition.append(2 * (moitie - decoupe_aleatoire[nb_types - 2]))
+        
     return repartition
+
+

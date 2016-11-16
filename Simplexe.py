@@ -1,84 +1,74 @@
-"""Module permettant de creer et gerer des simplexes"""
+"""Module gerant le simplexe"""
+
+import Vecteur_Signe
 
 class Simplexe:
-    """Classe créant un simplexe"""
+    """Classe creeant les simplexes"""
     
     def __init__(self):
-        """Initialisation du simplexe"""
+        """Cree le simplexe initiale"""
 
         self.chaine = []
-        self.taille = 0
-        self.dimension = 0
-        self.career_hemisphere = ' '
-         
-    def simplexe_initiale(self, nb_perles):
-        """Fonction creant un simplexe initiale"""
+        self.dimension = -1
+        self.carrier_hemisphere = []
 
-        chaine_0 = [0] * nb_perles
-        self.chaine = chaine_0
-        self.taille = nb_perles
-        
-        
-    def relation_ordre_partiel(self, other):
-        """ si self < other au sens de R alors la fonction renvoie vraie"""
 
-        for perle in range(self.taille):
-            if abs(self.chaine[perle]) > abs(other.chaine[perle]):
+    def __eq__(self, other):
+        """Definition de l'egalite entre 2 simplexe"""
+
+        if self.dimension != other.dimension:
+            return False
+        for indice in range(self.dimension +1):
+            if self.chaine[indice] != other.chaine[indice]:
                 return False
-            if self.chaine[perle] != 0:
-                if self.chaine[perle] != other.chaine[perle]:
-                    return False
         return True
 
-    
+
+    def __repr__(self):
+        """permet d'utiliser print"""
+
+        return str(self.chaine)
+
+
+    def __str__(self):
+        """permet d'utiliser print"""
+
+        return str(self.chaine)
+
+
     def dimension_simplexe(self):
         """Permet de calculer la dimension du simplexe"""
 
-        compteur = 0
-        for perle in range(self.taille):
-            if self.chaine[perle] != 0:
-                compteur += 1
-        self.dimension = compteur 
+        self.dimension = len(self.chaine) - 1
 
-    def concatenation(self, voleur):
-        """Permet d'ajouter une valeur à la chaîne du simplexe"""
+    def carrier_hemisphere_simplexe(self):
+        """Permet de calculer le carrier hemisphere"""
 
-        self.chaine[self.dimension] = voleur
-        self.dimension_simplexe()
+        if self.dimension > -1:
+            self.carrier_hemisphere = self.chaine[self.dimension].carrier_hemisphere
+            
+    def simplexe_moins(self, indice0):
 
-    def voisins(self):
-        """Trouve tous les voisins du simplexe"""
+        assert(indice0 <= self.dimension)
+        nouvelle_chaine = [self.chaine[indice] for indice in range(len(self.chaine)) if indice != indice0]
+        return creer_simplexe(nouvelle_chaine)
 
-        if (self.dimension > 1):
-            liste_voisins = []
-            liste_position_perle = []
-            liste_perle = []
-            for perle in range(self.taille):
-                if self.chaine[perle] != 0:
-                    liste_perle.append(self.chaine[perle])
-                    liste_position_perle.append(perle)
-            for perle in range(len(liste_perle)):
-                liste_vierge = [0] * self.taille
-                liste_vierge[liste_position_perle[perle]] = liste_perle[perle]
-                liste_voisins.append(liste_vierge)
-            return liste_voisins
-                
-                
-        
-    
-    
-    def trouver_career_hemisphere(self):
-        """Trouve le career hemisphere du simplexe"""
-        
-        hemisphere = ' '
-        for perle in range(self.taille):
-            if self.chaine[perle] == 1:
-                hemisphere = '+'
-            if self.chaine[perle] == -1:
-                hemisphere = '-'
-        self.career_hemisphere = hemisphere
 
-        
+    def liste_facette(self):
+        """retourne une liste contenant tous les simplexes etant facettes
+        de simplexe"""
 
-        
-       
+        liste_facette = []
+        for indice in range(len(self.chaine)):
+            liste_facette.append(self.simplexe_moins(indice))
+        return liste_facette
+
+
+def creer_simplexe(chaine):
+
+    simplexe = Simplexe()
+    simplexe.chaine = chaine
+    simplexe.chaine.sort()
+    simplexe.dimension_simplexe()
+    simplexe.carrier_hemisphere_simplexe()    
+    return simplexe

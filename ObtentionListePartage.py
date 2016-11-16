@@ -1,9 +1,7 @@
 """fichier contenant les fonctions permettant
 d'obtenir la liste des partages"""
 
-## Modules importes
 
-from Collier import Collier
 
 
 def ajout_element(liste, element):

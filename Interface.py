@@ -58,15 +58,19 @@ class Interface(QtGui.QDialog):
         #Creation du liste qui contiendra tous les boutons
         #correspondant à des cases de jeu
         list_buttons = []
-
         #Boucle creant les boutons correspondant au case de jeu
         for position, name in zip(positions, names):
 
             if name == '':
                 continue
+                
+            label = QtGui.QLabel() 
+            label.setPixmap(QtGui.QPixmap(LISTE_PERLE[0]))
+            grid.addWidget(label, *position)
             button = self.image_associe(name)
             grid.addWidget(button, *position)
-            button.setFlat(True)
+            
+             
 
 
         self.list_buttons = list_buttons
@@ -83,6 +87,7 @@ class Interface(QtGui.QDialog):
         button = QtGui.QPushButton()
         button.setIcon(QtGui.QIcon(LISTE_PERLE[int(name)]))
         button.setIconSize(QtCore.QSize(TAILLE_BOUTON, TAILLE_BOUTON))
+        button.setFlat(True)
 
 
         return button
