@@ -79,9 +79,9 @@ def fonction_lambda(vecteur_signe, collier):
     #print(repartition_perles_types)
     for i in range(collier.nb_types):
         moitie = int(collier.repartition[i] / 2)
-        if repartition_perles_types[0][i] > repartition_perles_types[1][i]:
+        if repartition_perles_types[0][i] > moitie:
             return (i + 1)
-        if repartition_perles_types[1][i] > repartition_perles_types[0][i]:
+        if repartition_perles_types[1][i] > moitie:
             return - (i + 1)
     return 0
 
