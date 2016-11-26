@@ -4,26 +4,27 @@ si des listes sont alternantes"""
 import Simplexe
 import Lambda
 import copy
+from numpy import sign
 
 def alternant(liste):
     """ fonction permettant de savoir si liste est +alternating (renvoit +1),
     -alternating (renvoit -1) ou rien (renvoit 0)"""
 
-    liste_abs = [abs(element) for element in liste]
-    liste_abs_sorted = sorted(liste_abs)
+    """liste_abs = [abs(element) for element in liste]
+    liste_abs_sorted = sorted(liste_abs)"""
     for i in range(len(liste) - 1):
-        if liste_abs_sorted[i] == liste_abs_sorted[i + 1]:
-            return 0
-    liste_sorted = []
+        if abs(liste[i]) == abs(liste[i + 1]):
+            return [0, i]
+    """liste_sorted = []
     for element in liste_abs_sorted:
         if element in liste:
             liste_sorted.append(element)
         else:
-            liste_sorted.append(- element)
+            liste_sorted.append(- element)"""
     for i in range (len(liste) - 1):
-        if liste_sorted[i] * liste_sorted[i + 1] >= 0:
-            return 0
-    return int(liste_sorted[0] / liste_abs_sorted[0])
+        if liste[i] * liste[i + 1] >= 0:
+            return [0, i]
+    return [sign(liste[len(liste) - 1]), 0]
 
 
 def alternant_simplexe(simplexe, collier):
@@ -57,43 +58,58 @@ def etre_noeud(simplexe, collier):
 
 
 def noeuds_voisins(simplexe, collier):
+    """Renvoit la liste des voisins  ou le vecteur signe solution 
+    si il est dans le simplexe"""
 
-    alternant = alternant_simplexe(simplexe, collier)
-    dimension = simplexe.dimension
-    carrier_hemisphere = simplexe.carrier_hemisphere
-    
-    
-    
-    #print("simplexe : ", simplexe)
-    #print("alternant : ", alternant)
-    #print("dimension : ", dimension)
-    #print("carrier hemisphere : i", carrier_hemisphere[0]," et epsilon ", carrier_hemisphere[1])
     
     liste_lambda = Lambda.fonction_lambda_liste(simplexe.chaine, collier)
-    #print("liste_lambda : ")
-    #print(liste_lambda)
+    
     if 0 in liste_lambda:
+
         indice = liste_lambda.index(0)
         simplexe_final = Simplexe.creer_simplexe([simplexe.chaine[indice]])
         return [simplexe_final, simplexe]
 
+    alternant_liste = alternant(liste_lambda)
+    dimension = simplexe.dimension
+    carrier_hemisphere = simplexe.carrier_hemisphere
+    
+    #print("simplexe : ", simplexe)
+    #♥print("alternant : ", alternant_liste[0], alternant_liste[1])
+    #print("dimension : ", dimension)
+    #print("carrier hemisphere : i", carrier_hemisphere[0]," et epsilon ", carrier_hemisphere[1])
+
+    #print("liste_lambda : ")
+    #print(liste_lambda)
+
+
     liste_voisins = []
 
     if dimension == carrier_hemisphere[0] and dimension > 0:
-        for facette in simplexe.liste_facette():
-            #print("facette : ", facette)
-            #print("carrier hemisphere : ", facette.carrier_hemisphere)
-            if etre_noeud(facette, collier):
-                if alternant_simplexe(facette, collier) == carrier_hemisphere[1]:
-                    liste_voisins.append(facette)
+        if alternant_liste[0] == 0:
+            liste_voisins.append(simplexe.simplexe_moins(alternant_liste[1]))
+            liste_voisins.append(simplexe.simplexe_moins(alternant_liste[1] + 1))
+            return liste_voisins
+        else:
+            if carrier_hemisphere[1] == 1:
+                if alternant_liste[0] == 1:
+                    liste_voisins.append(simplexe.simplexe_moins(0))
+                else:
+                    liste_voisins.append(simplexe.simplexe_moins(dimension))
+            else:
+                if alternant_liste[0] == 1:
+                    liste_voisins.append(simplexe.simplexe_moins(dimension))
+                else:
+                    liste_voisins.append(simplexe.simplexe_moins(0))
 
-    if alternant != 0:
+    if alternant_liste[0] != 0:
         if dimension == carrier_hemisphere[0]:
             chaine_copie = copy.deepcopy(simplexe.chaine)
-            nouveau_vecteur_signe = simplexe.chaine[dimension].ajout_copie(alternant, dimension +1)
+            nouveau_vecteur_signe = simplexe.chaine[dimension].ajout_copie(alternant_liste[0], dimension +1)
             chaine_copie.append(nouveau_vecteur_signe)
             supfacette = Simplexe.creer_simplexe(chaine_copie)
             liste_voisins.append(supfacette)
+            return liste_voisins
         else:
             chaine_copie1 = copy.deepcopy(simplexe.chaine)
             chaine_copie2 = copy.deepcopy(simplexe.chaine)
@@ -111,6 +127,7 @@ def noeuds_voisins(simplexe, collier):
                 supfacette2 = Simplexe.creer_simplexe(chaine_copie2)
                 liste_voisins.append(supfacette1)
                 liste_voisins.append(supfacette2)
+                return liste_voisins
             if  simplexe.chaine[dimension].liste.count(0) == (collier.nb_perles -carrier_hemisphere[0]):
                 nouveau_vecteur_signe1 = copy.deepcopy(simplexe.chaine[dimension])
                 nouveau_vecteur_signe2 = copy.deepcopy(simplexe.chaine[dimension])
