@@ -1,6 +1,7 @@
 """Module permettant de creer et gerer les vecteurs signes"""
 
 import copy
+import Lambda
 
 class Vecteur_Signe:
     """Classe créant un vecteur signe"""
@@ -11,6 +12,7 @@ class Vecteur_Signe:
         self.liste = [0] * nb_perles
         self.taille = nb_perles
         self.carrier_hemisphere = [-1, 0]
+        self.valeur_lambda = nb_perles
 
 
     def __lt__(self, other):
@@ -52,12 +54,13 @@ class Vecteur_Signe:
 
         return str(self.liste)
 
-    def ajout_copie(self, voleur, position):
+    def ajout_copie(self, voleur, position, collier):
         """Permet d'ajouter une valeur à la chaîne du vecteur_signe"""
 
         nouveau_vecteur_signe = copy.deepcopy(self)
         nouveau_vecteur_signe.liste[position] = voleur
         nouveau_vecteur_signe.trouver_carrier_hemisphere()
+        nouveau_vecteur_signe.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe, collier)
         return nouveau_vecteur_signe
 
     
@@ -76,10 +79,11 @@ class Vecteur_Signe:
 
         
 
-def creer_vecteur_signe(liste):
+def creer_vecteur_signe(liste, collier):
 
     vecteur_signe = Vecteur_Signe(len(liste))
     vecteur_signe.liste = liste
     vecteur_signe.trouver_carrier_hemisphere()
+    vecteur_signe.valeur_lambda = Lambda.fonction_lambda(vecteur_signe, collier)
     return vecteur_signe        
        

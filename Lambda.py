@@ -7,15 +7,15 @@ from Collier import Collier
 import Vecteur_Signe
 import copy
 
-def fonction_m_complet(vecteur_signe):
-    """fonction calculant m d'un vecteur_signe complet (sans 0)
+def fonction_m_complet(liste):
+    """fonction calculant m d'une liste complet (sans 0)
     definit comme le nombre d'alternance entre 0 et 1
     et de signe le premier element du vecteur_signe"""
 
-    signe = vecteur_signe.liste[0]
+    signe = liste[0]
     val_abs = 0
-    for i in range(len(vecteur_signe.liste) - 1):
-        if vecteur_signe.liste[i] != vecteur_signe.liste[i+1]:
+    for i in range(len(liste) - 1):
+        if liste[i] != liste[i+1]:
             val_abs += 1
     return signe * val_abs
 
@@ -47,9 +47,7 @@ def fonction_m(vecteur_signe):
         if liste_copie[i] == 0:
             liste_copie[i] = - liste_copie[i - 1]
 
-    vecteur_signe_complet = Vecteur_Signe.creer_vecteur_signe(liste_copie)
-
-    return fonction_m_complet(vecteur_signe_complet)
+    return fonction_m_complet(liste_copie)
 
 
 def repartition_joueurs_types(vecteur_signe, collier):

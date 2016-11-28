@@ -30,11 +30,21 @@ for i in range(collier.nb_perles):
 pygame.draw.lines(DISPLAYSURF, NOIR, False, liste_positions, 4)
 for i in range(collier.nb_perles):
     pygame.draw.circle(DISPLAYSURF, LISTE_COULEURS[collier.liste[i]], liste_positions[i], 20)
-    
-    
+
+pygame.mouse.set_visible(False)
+cursor_picture = pygame.image.load("ciseaux.png").convert_alpha()
+cursor_picture = pygame.transform.scale(cursor_picture,(15, 30))
+
 while True: # main game loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.MOUSEMOTION:
+            DISPLAYSURF.fill(BLANC)
+            pygame.draw.lines(DISPLAYSURF, NOIR, False, liste_positions, 4)
+            for i in range(collier.nb_perles):
+                pygame.draw.circle(DISPLAYSURF, LISTE_COULEURS[collier.liste[i]], liste_positions[i], 20)
+            
+    DISPLAYSURF.blit(cursor_picture, pygame.mouse.get_pos())
     pygame.display.update()

@@ -62,8 +62,8 @@ def noeuds_voisins(simplexe, collier):
     si il est dans le simplexe"""
 
     
-    liste_lambda = Lambda.fonction_lambda_liste(simplexe.chaine, collier)
-    
+    liste_lambda = [vecteur_signe.valeur_lambda for vecteur_signe in simplexe.chaine]
+
     if 0 in liste_lambda:
 
         indice = liste_lambda.index(0)
@@ -75,12 +75,12 @@ def noeuds_voisins(simplexe, collier):
     carrier_hemisphere = simplexe.carrier_hemisphere
     
     #print("simplexe : ", simplexe)
-    #♥print("alternant : ", alternant_liste[0], alternant_liste[1])
+    #print("alternant : ", alternant_liste[0], alternant_liste[1])
     #print("dimension : ", dimension)
     #print("carrier hemisphere : i", carrier_hemisphere[0]," et epsilon ", carrier_hemisphere[1])
 
-    #print("liste_lambda : ")
-    #print(liste_lambda)
+    print("liste_lambda : ")
+    print(liste_lambda)
 
 
     liste_voisins = []
@@ -105,7 +105,7 @@ def noeuds_voisins(simplexe, collier):
     if alternant_liste[0] != 0:
         if dimension == carrier_hemisphere[0]:
             chaine_copie = copy.deepcopy(simplexe.chaine)
-            nouveau_vecteur_signe = simplexe.chaine[dimension].ajout_copie(alternant_liste[0], dimension +1)
+            nouveau_vecteur_signe = simplexe.chaine[dimension].ajout_copie(alternant_liste[0], dimension +1, collier)
             chaine_copie.append(nouveau_vecteur_signe)
             supfacette = Simplexe.creer_simplexe(chaine_copie)
             liste_voisins.append(supfacette)
@@ -121,6 +121,8 @@ def noeuds_voisins(simplexe, collier):
                 nouveau_vecteur_signe2.liste[liste_indice_difference[1]] = 0
                 nouveau_vecteur_signe1.trouver_carrier_hemisphere()
                 nouveau_vecteur_signe2.trouver_carrier_hemisphere()
+                nouveau_vecteur_signe1.valeur_lambda =  Lambda.fonction_lambda(nouveau_vecteur_signe1, collier)
+                nouveau_vecteur_signe2.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe2 , collier)
                 chaine_copie1.append(nouveau_vecteur_signe1)
                 chaine_copie2.append(nouveau_vecteur_signe2)
                 supfacette1 = Simplexe.creer_simplexe(chaine_copie1)
@@ -137,12 +139,15 @@ def noeuds_voisins(simplexe, collier):
                         nouveau_vecteur_signe2.liste[indice] = -1
                         nouveau_vecteur_signe1.trouver_carrier_hemisphere()
                         nouveau_vecteur_signe2.trouver_carrier_hemisphere()
+                        nouveau_vecteur_signe1.valeur_lambda =  Lambda.fonction_lambda(nouveau_vecteur_signe1, collier)
+                        nouveau_vecteur_signe2.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe2 , collier)
                         chaine_copie1.append(nouveau_vecteur_signe1)
                         chaine_copie2.append(nouveau_vecteur_signe2)
                         supfacette1 = Simplexe.creer_simplexe(chaine_copie1)
                         supfacette2 = Simplexe.creer_simplexe(chaine_copie2)
                         liste_voisins.append(supfacette1)
                         liste_voisins.append(supfacette2)
+                        return liste_voisins
             for i in range(len(simplexe.chaine) - 1):
                 if simplexe.chaine[i].liste.count(0) != simplexe.chaine[i+1].liste.count(0) + 1:
                     nouveau_vecteur_signe1 = copy.deepcopy(simplexe.chaine[i])
@@ -152,6 +157,8 @@ def noeuds_voisins(simplexe, collier):
                     nouveau_vecteur_signe2.liste[liste_indice_difference[1]] = simplexe.chaine[i+1].liste[liste_indice_difference[1]]
                     nouveau_vecteur_signe1.trouver_carrier_hemisphere()
                     nouveau_vecteur_signe2.trouver_carrier_hemisphere()
+                    nouveau_vecteur_signe1.valeur_lambda =  Lambda.fonction_lambda(nouveau_vecteur_signe1, collier)
+                    nouveau_vecteur_signe2.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe2, collier)
                     chaine_copie1.append(nouveau_vecteur_signe1)
                     chaine_copie2.append(nouveau_vecteur_signe2)
                     supfacette1 = Simplexe.creer_simplexe(chaine_copie1)

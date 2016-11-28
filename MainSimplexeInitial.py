@@ -7,18 +7,18 @@ import Simplexe
 import copy
 import Lambda
 
-def creation_simplexes_initiaux(nb_types, nb_perles):
+def creation_simplexes_initiaux(nb_types, nb_perles, collier):
     """Creation des 2 simplexes initiaux la ou le chamin commence
     a dependre du collier"""
 
     chaine = []
     for i in range(1,nb_perles-nb_types):
         liste = [0]*(nb_perles-nb_types-1-i) + [-1]*i + [0]*(nb_types+1)
-        vecteur_signe = Vecteur_Signe.creer_vecteur_signe(liste)
+        vecteur_signe = Vecteur_Signe.creer_vecteur_signe(liste, collier)
         chaine.append(vecteur_signe)
     simplexe_0 = Simplexe.creer_simplexe(chaine)
     #print(simplexe_0)
-    vecteur_signe_1 = Vecteur_Signe.creer_vecteur_signe([-1]*(nb_perles-nb_types) + [0]*nb_types)
+    vecteur_signe_1 = Vecteur_Signe.creer_vecteur_signe([-1]*(nb_perles-nb_types) + [0]*nb_types, collier)
     chaine_1 = copy.deepcopy(chaine)
     chaine_1.append(vecteur_signe_1)
     #print(chaine_1)
@@ -30,13 +30,13 @@ def creation_simplexes_initiaux(nb_types, nb_perles):
 def main_simplexe_initial():
 
 
-    nb_perles = 24
-    nb_types = 1
+    nb_perles = 8
+    nb_types = 3
     collier = Collier.Collier()
     collier.collier_aleatoire(nb_types, nb_perles)
     #print("collier : ", collier.liste)
 
-    simplexes_initiaux =  creation_simplexes_initiaux(nb_types, nb_perles)
+    simplexes_initiaux =  creation_simplexes_initiaux(nb_types, nb_perles, collier)
     simplexe_initial = simplexes_initiaux[0]
     simplexe = simplexes_initiaux[1]
     #print("simplexe initial : ", simplexe_initial)
@@ -54,7 +54,7 @@ def main_simplexe_initial():
         else:
             simplexe_initial = copy.deepcopy(simplexe)
             simplexe = copy.deepcopy(liste_noeuds_voisins[0])
-        #print("\n simplexe choisi : ",simplexe)
+        print("\n simplexe choisi : ",simplexe)
         liste_noeuds_voisins = Alternant.noeuds_voisins(simplexe, collier)
         nb_iter += 1
 
