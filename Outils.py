@@ -1,6 +1,6 @@
 import random
 
-def repartition_perle(nb_perles, nb_types):
+def repartition_aleatoire_perle(nb_perles, nb_types):
     """Renvoit un nombre de perles aleatoires par types repondant
     aux donnees du problemes"""
         
@@ -22,4 +22,16 @@ def repartition_perle(nb_perles, nb_types):
         
     return repartition
 
+
+def repartition_perle(nb_perles, nb_types):
+    """renvoit la repartition correspondant a nb_perles et nb_types
+    avec le meme nombre de perle pour chaque type"""
+
+    moitie = int(nb_perles / 2)
+    
+    valeur = moitie / nb_types
+    if valeur - int(valeur) < 0.5:
+        return [2 * int(valeur)] * (nb_types - 1) + [nb_perles -2 * int(valeur) * (nb_types - 1)]
+    else:
+        return [2 * (int(valeur) + 1)] * (nb_types - 1) + [nb_perles -2 * (int(valeur) + 1) * (nb_types - 1)]
 

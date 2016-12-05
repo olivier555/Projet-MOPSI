@@ -1,5 +1,6 @@
 """Programme principal"""
 
+
 import Alternant
 import Collier
 import Vecteur_Signe

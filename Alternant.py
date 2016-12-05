@@ -79,8 +79,8 @@ def noeuds_voisins(simplexe, collier):
     #print("dimension : ", dimension)
     #print("carrier hemisphere : i", carrier_hemisphere[0]," et epsilon ", carrier_hemisphere[1])
 
-    print("liste_lambda : ")
-    print(liste_lambda)
+    #print("liste_lambda : ")
+    #print(liste_lambda)
 
 
     liste_voisins = []
@@ -89,6 +89,7 @@ def noeuds_voisins(simplexe, collier):
         if alternant_liste[0] == 0:
             liste_voisins.append(simplexe.simplexe_moins(alternant_liste[1]))
             liste_voisins.append(simplexe.simplexe_moins(alternant_liste[1] + 1))
+            #print("aa")
             return liste_voisins
         else:
             if carrier_hemisphere[1] == 1:
@@ -105,15 +106,17 @@ def noeuds_voisins(simplexe, collier):
     if alternant_liste[0] != 0:
         if dimension == carrier_hemisphere[0]:
             chaine_copie = copy.deepcopy(simplexe.chaine)
-            nouveau_vecteur_signe = simplexe.chaine[dimension].ajout_copie(alternant_liste[0], dimension +1, collier)
+            nouveau_vecteur_signe = simplexe.chaine[dimension].ajout_copie(alternant_liste[0], dimension + 1, collier)
             chaine_copie.append(nouveau_vecteur_signe)
             supfacette = Simplexe.creer_simplexe(chaine_copie)
             liste_voisins.append(supfacette)
+            #print("bb")
             return liste_voisins
         else:
             chaine_copie1 = copy.deepcopy(simplexe.chaine)
             chaine_copie2 = copy.deepcopy(simplexe.chaine)
-            if simplexe.chaine[0].liste.count(0) != len(simplexe.chaine[0].liste) - 1:
+            #liste_nombre_zeros = [vecteur_signe.liste.count(0) for vecteur_signe in simplexe.chaine]
+            if simplexe.chaine[0].nombre_zeros != len(simplexe.chaine[0].liste) - 1:
                 nouveau_vecteur_signe1 = copy.deepcopy(simplexe.chaine[0])
                 nouveau_vecteur_signe2 = copy.deepcopy(simplexe.chaine[0])
                 liste_indice_difference = [j for j in range(len(simplexe.chaine[0].liste)) if simplexe.chaine[0].liste[j] != 0]
@@ -123,14 +126,17 @@ def noeuds_voisins(simplexe, collier):
                 nouveau_vecteur_signe2.trouver_carrier_hemisphere()
                 nouveau_vecteur_signe1.valeur_lambda =  Lambda.fonction_lambda(nouveau_vecteur_signe1, collier)
                 nouveau_vecteur_signe2.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe2 , collier)
+                nouveau_vecteur_signe1.nombre_zeros = len(nouveau_vecteur_signe1.liste) -  1
+                nouveau_vecteur_signe2.nombre_zeros = nouveau_vecteur_signe1.nombre_zeros
                 chaine_copie1.append(nouveau_vecteur_signe1)
                 chaine_copie2.append(nouveau_vecteur_signe2)
                 supfacette1 = Simplexe.creer_simplexe(chaine_copie1)
                 supfacette2 = Simplexe.creer_simplexe(chaine_copie2)
                 liste_voisins.append(supfacette1)
                 liste_voisins.append(supfacette2)
+                #print("cc")
                 return liste_voisins
-            if  simplexe.chaine[dimension].liste.count(0) == (collier.nb_perles -carrier_hemisphere[0]):
+            if  simplexe.chaine[dimension].nombre_zeros == (collier.nb_perles - carrier_hemisphere[0]):
                 nouveau_vecteur_signe1 = copy.deepcopy(simplexe.chaine[dimension])
                 nouveau_vecteur_signe2 = copy.deepcopy(simplexe.chaine[dimension])
                 for indice in range(carrier_hemisphere[0] + 1 ):
@@ -141,15 +147,18 @@ def noeuds_voisins(simplexe, collier):
                         nouveau_vecteur_signe2.trouver_carrier_hemisphere()
                         nouveau_vecteur_signe1.valeur_lambda =  Lambda.fonction_lambda(nouveau_vecteur_signe1, collier)
                         nouveau_vecteur_signe2.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe2 , collier)
+                        nouveau_vecteur_signe1.nombre_zeros = simplexe.chaine[dimension].nombre_zeros - 1
+                        nouveau_vecteur_signe2.nombre_zeros = nouveau_vecteur_signe1.nombre_zeros
                         chaine_copie1.append(nouveau_vecteur_signe1)
                         chaine_copie2.append(nouveau_vecteur_signe2)
                         supfacette1 = Simplexe.creer_simplexe(chaine_copie1)
                         supfacette2 = Simplexe.creer_simplexe(chaine_copie2)
                         liste_voisins.append(supfacette1)
                         liste_voisins.append(supfacette2)
+                        #print("dd")
                         return liste_voisins
             for i in range(len(simplexe.chaine) - 1):
-                if simplexe.chaine[i].liste.count(0) != simplexe.chaine[i+1].liste.count(0) + 1:
+                if simplexe.chaine[i].nombre_zeros != simplexe.chaine[i+1].nombre_zeros + 1:
                     nouveau_vecteur_signe1 = copy.deepcopy(simplexe.chaine[i])
                     nouveau_vecteur_signe2 = copy.deepcopy(simplexe.chaine[i])
                     liste_indice_difference = [j for j in range(len(simplexe.chaine[i].liste)) if simplexe.chaine[i].liste[j] != simplexe.chaine[i+1].liste[j]]
@@ -159,13 +168,18 @@ def noeuds_voisins(simplexe, collier):
                     nouveau_vecteur_signe2.trouver_carrier_hemisphere()
                     nouveau_vecteur_signe1.valeur_lambda =  Lambda.fonction_lambda(nouveau_vecteur_signe1, collier)
                     nouveau_vecteur_signe2.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe2, collier)
+                    nouveau_vecteur_signe1.nombre_zeros = simplexe.chaine[i].nombre_zeros - 1
+                    nouveau_vecteur_signe2.nombre_zeros = nouveau_vecteur_signe1.nombre_zeros
                     chaine_copie1.append(nouveau_vecteur_signe1)
                     chaine_copie2.append(nouveau_vecteur_signe2)
                     supfacette1 = Simplexe.creer_simplexe(chaine_copie1)
                     supfacette2 = Simplexe.creer_simplexe(chaine_copie2)
                     liste_voisins.append(supfacette1)
                     liste_voisins.append(supfacette2)
+                    #print("ee")
+                    return liste_voisins
 
     #print("voisins : ", liste_voisins)
+    #print("ff")
     return liste_voisins
     

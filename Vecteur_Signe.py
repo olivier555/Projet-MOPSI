@@ -13,6 +13,7 @@ class Vecteur_Signe:
         self.taille = nb_perles
         self.carrier_hemisphere = [-1, 0]
         self.valeur_lambda = nb_perles
+        self.nombre_zeros = nb_perles
 
 
     def __lt__(self, other):
@@ -59,6 +60,7 @@ class Vecteur_Signe:
 
         nouveau_vecteur_signe = copy.deepcopy(self)
         nouveau_vecteur_signe.liste[position] = voleur
+        nouveau_vecteur_signe.nombre_zeros = nouveau_vecteur_signe.liste.count(0)
         nouveau_vecteur_signe.trouver_carrier_hemisphere()
         nouveau_vecteur_signe.valeur_lambda = Lambda.fonction_lambda(nouveau_vecteur_signe, collier)
         return nouveau_vecteur_signe
@@ -83,6 +85,7 @@ def creer_vecteur_signe(liste, collier):
 
     vecteur_signe = Vecteur_Signe(len(liste))
     vecteur_signe.liste = liste
+    vecteur_signe.nombre_zeros = liste.count(0)
     vecteur_signe.trouver_carrier_hemisphere()
     vecteur_signe.valeur_lambda = Lambda.fonction_lambda(vecteur_signe, collier)
     return vecteur_signe        

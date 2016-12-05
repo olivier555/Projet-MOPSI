@@ -24,6 +24,23 @@ class Collier:
             Outils.random.shuffle(self.liste)
             self.nb_types = nb_types
             self.nb_perles = nb_perles
+            
+    def collier_aleatoire_jeu(self, nb_types, nb_perles):
+        
+        if nb_types == 1:
+            self.liste = [0] * nb_perles
+            self.nb_types = nb_types
+            self.nb_perles = nb_perles
+            self.repartition = [nb_perles]
+        
+        else:
+        
+            self.repartition = Outils.repartition_aleatoire_perle(nb_perles, nb_types)
+            for i in range(nb_types):
+                self.liste += [i]*self.repartition[i]
+            Outils.random.shuffle(self.liste)
+            self.nb_types = nb_types
+            self.nb_perles = nb_perles
         
     def collier_choisi(self, nb_types, nb_perles):
 
@@ -43,8 +60,16 @@ class Collier:
         
         monFichier = open(fichier, "r")
         contenu = monFichier.read()
-        liste_collier = contenu.split(",")
-        for i in range(len(liste_collier)):
-            self.liste += liste_collier[i]
+        liste_collier = contenu.split("\n")
+        caracteristique = liste_collier[0].split(' ')
+        self.nb_types = int(caracteristique[0])
+        self.nb_perles = int(caracteristique[2]) * int(caracteristique[1]) * int(caracteristique[0])
+        print(len(liste_collier))
+        liste_perles = liste_collier[1].split(' ')
+        print(len(liste_perles))
+        liste = []
+        for i in range(self.nb_perles):
+            liste.append(liste_perles[i])
+        self.liste = liste
        
        

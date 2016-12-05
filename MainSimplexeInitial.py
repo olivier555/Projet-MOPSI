@@ -1,5 +1,6 @@
 """Programme principal"""
 
+import time
 import Alternant
 import Collier
 import Vecteur_Signe
@@ -27,11 +28,9 @@ def creation_simplexes_initiaux(nb_types, nb_perles, collier):
     return [simplexe_0, simplexe_1]
 
 
-def main_simplexe_initial():
+def main_simplexe_initial(nb_perles, nb_types):
 
 
-    nb_perles = 8
-    nb_types = 3
     collier = Collier.Collier()
     collier.collier_aleatoire(nb_types, nb_perles)
     #print("collier : ", collier.liste)
@@ -48,14 +47,19 @@ def main_simplexe_initial():
 
     while len(liste_noeuds_voisins) == 2 and Lambda.fonction_lambda(simplexe.chaine[simplexe.dimension], collier) != 0:
         #print(Lambda.fonction_lambda(simplexe.chaine[simplexe.dimension], collier))
+        #t = time.time()
         if simplexe_initial == liste_noeuds_voisins[0]:
             simplexe_initial = copy.deepcopy(simplexe)
             simplexe = copy.deepcopy(liste_noeuds_voisins[1])
         else:
             simplexe_initial = copy.deepcopy(simplexe)
             simplexe = copy.deepcopy(liste_noeuds_voisins[0])
-        print("\n simplexe choisi : ",simplexe)
+        #print("temps de comparaison : ",time.time() - t)
+        #print("\n simplexe choisi : ",simplexe)
+        #print([vecteur_signe.nombre_zeros for vecteur_signe in simplexe.chaine])
+        #t = time.time()
         liste_noeuds_voisins = Alternant.noeuds_voisins(simplexe, collier)
+        #print("temps de recherche voisin : ",time.time() - t)
         nb_iter += 1
 
     #print(Lambda.fonction_lambda(simplexe.chaine[simplexe.dimension], collier))
@@ -63,3 +67,4 @@ def main_simplexe_initial():
     print("\n simplexe final : ", simplexe)
     print("collier : ", collier.liste)
     print("nombre d'iterations : ", nb_iter)
+    return nb_iter

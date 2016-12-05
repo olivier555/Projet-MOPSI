@@ -28,7 +28,7 @@ def decoupe_type_valable(collier, partage):
         compteur_1 = 0
         compteur_2 = 0
         for perle in range(len(partage)):
-            if collier.chaine[perle] == type:
+            if collier.liste[perle] == type:
                 if partage[perle] == 1:
                     compteur_1 += 1
                 else:
