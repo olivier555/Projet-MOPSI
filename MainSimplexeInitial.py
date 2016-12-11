@@ -18,13 +18,10 @@ def creation_simplexes_initiaux(nb_types, nb_perles, collier):
         vecteur_signe = Vecteur_Signe.creer_vecteur_signe(liste, collier)
         chaine.append(vecteur_signe)
     simplexe_0 = Simplexe.creer_simplexe(chaine)
-    #print(simplexe_0)
     vecteur_signe_1 = Vecteur_Signe.creer_vecteur_signe([-1]*(nb_perles-nb_types) + [0]*nb_types, collier)
     chaine_1 = copy.deepcopy(chaine)
     chaine_1.append(vecteur_signe_1)
-    #print(chaine_1)
     simplexe_1 = Simplexe.creer_simplexe(chaine_1)
-    #print(simplexe_1)
     return [simplexe_0, simplexe_1]
 
 
@@ -33,7 +30,6 @@ def main_simplexe_initial(nb_perles, nb_types):
 
     collier = Collier.Collier()
     collier.collier_aleatoire(nb_types, nb_perles)
-    #print("collier : ", collier.liste)
 
     simplexes_initiaux =  creation_simplexes_initiaux(nb_types, nb_perles, collier)
     simplexe_initial = simplexes_initiaux[0]
@@ -45,7 +41,8 @@ def main_simplexe_initial(nb_perles, nb_types):
     
     nb_iter = 0
 
-    while len(liste_noeuds_voisins) == 2 and Lambda.fonction_lambda(simplexe.chaine[simplexe.dimension], collier) != 0:
+    bool = True
+    while len(liste_noeuds_voisins) == 2 and bool:
         #print(Lambda.fonction_lambda(simplexe.chaine[simplexe.dimension], collier))
         #t = time.time()
         if simplexe_initial == liste_noeuds_voisins[0]:
@@ -61,6 +58,7 @@ def main_simplexe_initial(nb_perles, nb_types):
         liste_noeuds_voisins = Alternant.noeuds_voisins(simplexe, collier)
         #print("temps de recherche voisin : ",time.time() - t)
         nb_iter += 1
+        bool = 0 not in [vec.valeur_lambda for vec in simplexe.chaine]
 
     #print(Lambda.fonction_lambda(simplexe.chaine[simplexe.dimension], collier))
     #print("\n simplexe precedent : ", simplexe_initial)

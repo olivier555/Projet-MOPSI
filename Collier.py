@@ -1,3 +1,4 @@
+import random
 import Outils
 
 class Collier:
@@ -38,7 +39,7 @@ class Collier:
             self.repartition = Outils.repartition_aleatoire_perle(nb_perles, nb_types)
             for i in range(nb_types):
                 self.liste += [i]*self.repartition[i]
-            Outils.random.shuffle(self.liste)
+            random.shuffle(self.liste)
             self.nb_types = nb_types
             self.nb_perles = nb_perles
         
@@ -71,5 +72,17 @@ class Collier:
         for i in range(self.nb_perles):
             liste.append(liste_perles[i])
         self.liste = liste
+        monFichier.close()
+
+    def collier_repartition(self, repartition):
+        """Cree un collier a partir de la liste reartition
+        donnant le nombre de perles par type"""
+
+        self.nb_types = len(repartition)
+        self.liste = []
+        for i in range(self.nb_types):
+            self.liste += [i] * repartition[i]
+        random.shuffle(self.liste)
+        self.nb_perles = len(self.liste)
        
        
