@@ -166,15 +166,15 @@ nb_coupes = collier.nb_types
 
 niveau_reussi = False
 
-temps_niveau = 150
+temps_niveau = 30
 nb_coquillage = 10
 t1 = math.pi / 2
 centre_temps = [int(TAILLE / 2), int(TAILLE / 3)]
 RAYON_TEMPS = 70
 liste_positions_temps = []
-for i in range(nb_coquillage):
+for i in range(nb_coquillage + 1):
     liste_positions_temps.append((int(centre_temps[0] + RAYON_TEMPS * math.cos(t1)), int(centre_temps[1] - RAYON_TEMPS * math.sin(t1))))
-    t1 += 2 * math.pi / (nb_coquillage - 1) 
+    t1 += 2 * math.pi / (nb_coquillage) 
 
 start = time.time()
 temps_ecoule = False
@@ -245,7 +245,7 @@ def affiche_coups_restants(fenetre, nb_coupes, nb_types):
 def affichage_chronometre(fenetre):
     """affiche le chronometre"""
 
-    nb_coquillages_restant = int(nb_coquillage * (temps_niveau - time.time() + start) / temps_niveau)
+    nb_coquillages_restant = int(nb_coquillage * (temps_niveau - time.time() + start) / temps_niveau) + 1
     if nb_coquillages_restant < int(nb_coquillage / 3):
         for t in range(nb_coquillages_restant):
             fenetre.blit(bulle_rouge, liste_positions_temps[t])
