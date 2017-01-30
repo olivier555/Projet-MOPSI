@@ -1,12 +1,11 @@
 import Niveau
 import Menu
 import pygame
-import Score
-
 import sqlite3
 
+game = sqlite3.connect("game.db")
 
-
+cursor = game.cursor()
 
 
 def jouer_menu(n, fenetre, liste_repartition, liste_temps):
@@ -32,37 +31,35 @@ def main():
     liste_repartition = []
     liste_temps = []
     liste_score = []
-        
-    
-    Score.cursor.execute("""SELECT rouge, orange, jaune, vert, bleu, violet, marron, rose, blanc FROM necklace""")
-    rows = Score.cursor.fetchall()
+
+    cursor.execute("""SELECT rouge, orange, jaune, vert, bleu, violet, marron, rose, blanc FROM necklace""")
+    rows = cursor.fetchall()
     for row in rows:
         liste_repartition.append(row)
-    
-    Score.cursor.execute("""SELECT time FROM level""")
-    rows = Score.cursor.fetchall()
+
+
+    cursor.execute("""SELECT time FROM level""")
+    rows = cursor.fetchall()
     for row in rows:
         liste_temps.append(row[0])
-        
-    Score.cursor.execute("""SELECT stars FROM score""")
-    rows = Score.cursor.fetchall()
+
+    cursor.execute("""SELECT stars FROM score""")
+    rows = cursor.fetchall()
     for row in rows:
         liste_score.append(row[0])
-        
-    Score.cursor.execute("""SELECT number FROM score WHERE open = "FALSE" """)
-    row = Score.cursor.fetchone() 
-    actual_level = row[0]
+
+    cursor.execute("""SELECT number FROM score WHERE open = "FALSE" """)
+    row = cursor.fetchone() 
+    actual_level = row[0] - 1
 
 
     pygame.init()
     fenetre = pygame.display.set_mode((800, 600))
     
-    t = Menu.Menu(actual_level, fenetre, liste_repartition, liste_temps)
+    menu = Menu.Menu(actual_level, fenetre, liste_repartition, liste_temps)
+    t = menu.play()
     
     
-    for level in range(actual_level, t + 1):
-        Score.cursor.execute("""UPDATE score SET open = "TRUE" WHERE number = level """)
-            
-            
-    
-    
+    for lev in range(actual_level + 1, t + 1):
+        cursor.execute("""UPDATE score SET open = "TRUE" WHERE number = ? """, (lev,))
+    game.commit()

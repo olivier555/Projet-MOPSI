@@ -34,6 +34,7 @@ def text_objects(text, font):
 
 
 def bouton_actif(msg, x, y, w, h, ic, ac, gameDisplay, action=None):
+
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     #print(click)
@@ -73,17 +74,18 @@ class Menu:
         self.nb_niveau = nb_niveau
         self.liste_repartition = liste_repartition
         self.liste_temps = liste_temps
-        self.game_intro()
-        
 
+    def play(self):
+        self.game_intro()
+        pygame.quit()
+        return self.nb_niveau
     
     def game_intro(self):
 
 
-        gameExit = False
+        self.gameExit = False
     
-        while not gameExit:
-
+        while not self.gameExit:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -95,29 +97,25 @@ class Menu:
             TextRect.center = ( (display_width / 2), (display_height / 2) )
             self.gameDisplay.blit(TextSurf, TextRect)
     
-
-            bouton_actif("Quit", 600, 450, 100, 50, red, bright_red, self.gameDisplay, self.quitgame)
             bouton_actif("Niveau", 100, 450, 100, 50, green, bright_green, self.gameDisplay, self.game_niveau)
             bouton_actif("Règles", 400, 450, 100, 50, blue, bright_blue, self.gameDisplay, self.game_regles)
-
+            bouton_actif("Quit", 600, 450, 100, 50, red, bright_red, self.gameDisplay, self.quitgame)
             
+
             pygame.display.update()
             self.clock.tick(15)
-            
-            
-    
+
     
     def game_regles(self):
 
-        gameExit = False
     
-        while not gameExit:
-    
+        while not self.gameExit:
+
             for event in pygame.event.get():
-                #print(event)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
+                    
     
             self.gameDisplay.fill(white)
             largeText = pygame.font.SysFont("comicsansms", 115)
@@ -131,22 +129,19 @@ class Menu:
             
             pygame.display.update()
             self.clock.tick(60)
-            
+   
 
     
     def game_niveau(self):
 
+ 
+        while not self.gameExit:
     
-        gameExit = False
-    
-        while not gameExit:
-
             for event in pygame.event.get():
-                #print(event)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-    
+                    
             self.gameDisplay.fill(white)
             largeText = pygame.font.SysFont("comicsansms", 115)
             TextSurf, TextRect = text_objects("Niveau", largeText)
@@ -207,15 +202,9 @@ class Menu:
                 level = Niveau.Niveau(self.gameDisplay, self.liste_repartition[niv], self.liste_temps[niv])
                 entier = level.jouer()
 
-
-
-
     def quitgame(self):
 
-        print(self.nb_niveau)
-        a = self.nb_niveau
-        pygame.quit()
-        return(a)
+        self.gameExit = True
         
     
     def game_tuto(self):
