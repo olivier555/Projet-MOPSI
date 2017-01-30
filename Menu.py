@@ -5,7 +5,7 @@
 import pygame
 import sys
 import time
-
+import Image
 import Niveau
 
 
@@ -64,22 +64,26 @@ def bouton_non_actif(msg, x, y, w, h, ic, gameDisplay):
 class Menu:
     """Classe permettant de generer un menu en fonction du nombre de niveaux debloques"""
 
-    def __init__(self, nb_niveau):
+    def __init__(self, nb_niveau, fenetre, liste_repartition, liste_temps):
     
         pygame.init()
-        self.gameDisplay = pygame.display.set_mode( (display_width, display_height) )
+        self.gameDisplay = fenetre
         pygame.display.set_caption('Pearl Cut')
         self.clock = pygame.time.Clock()
         self.nb_niveau = nb_niveau
+        self.liste_repartition = liste_repartition
+        self.liste_temps = liste_temps
         self.game_intro()
-    
         
+
     
     def game_intro(self):
+
+
+        gameExit = False
     
-        intro = True
-    
-        while intro:
+        while not gameExit:
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -96,8 +100,11 @@ class Menu:
             bouton_actif("Niveau", 100, 450, 100, 50, green, bright_green, self.gameDisplay, self.game_niveau)
             bouton_actif("Règles", 400, 450, 100, 50, blue, bright_blue, self.gameDisplay, self.game_regles)
 
+            
             pygame.display.update()
             self.clock.tick(15)
+            
+            
     
     
     def game_regles(self):
@@ -120,12 +127,15 @@ class Menu:
 
             bouton_actif("Quit", 600, 450, 100, 50, red, bright_red, self.gameDisplay, self.quitgame)
             bouton_actif("Menu", 300, 450, 100, 50, green, bright_green, self.gameDisplay, self.game_intro)
+            bouton_actif("Tuto", 100, 450, 100, 50, red, bright_red, self.gameDisplay, self.game_tuto)
             
             pygame.display.update()
             self.clock.tick(60)
+            
 
     
     def game_niveau(self):
+
     
         gameExit = False
     
@@ -146,12 +156,12 @@ class Menu:
             for niveau in range(self.nb_niveau):
     
                 nom_niveau = "Niveau " + str(niveau + 1)
-                bouton_actif(nom_niveau, 100 + niveau * 110, 340, 100, 50, green, bright_green, self.gameDisplay, self.game)
+                bouton_actif(nom_niveau, 100 + niveau % 4 * 110, 250 + niveau // 4 * 60, 100, 50, green, bright_green, self.gameDisplay, lambda:self.game(niveau))
             
-            for niveau in range(self.nb_niveau, 6):
+            for niveau in range(self.nb_niveau, 12):
     
                 nom_niveau = "Niveau " + str(niveau + 1)
-                bouton_non_actif(nom_niveau, 100 + (niveau - 3) * 110, 400, 100, 50, green, self.gameDisplay) 
+                bouton_non_actif(nom_niveau, 100 + niveau % 4 * 110, 250 + niveau // 4 * 60, 100, 50, green, self.gameDisplay) 
     
             bouton_actif("Menu", 300, 460, 100, 50, green, bright_green, self.gameDisplay, self.game_intro)
             
@@ -159,17 +169,59 @@ class Menu:
             pygame.display.update()
             self.clock.tick(60)
 
-    
-    def game(self):
 
-        repartition = [2, 2, 2, 4]
-        niveau = Niveau.Niveau(self.gameDisplay, repartition, 50) 
-        niveau.jouer()
-        niveau.affichage_complet()
+    
+    def game(self, niv):
+
+        level = Niveau.Niveau(self.gameDisplay, self.liste_repartition[niv], self.liste_temps[niv])
+        entier = level.jouer()
+        if niv == self.nb_niveau - 1:
+            if entier == 1:
+                self.nb_niveau += 1
+                self.game_intro()
+            if entier == 2:
+                self.nb_niveau += 1
+                while entier == 2:
+                    level = Niveau.Niveau(self.gameDisplay, self.liste_repartition[niv], self.liste_temps[niv])
+                    entier = level.jouer()
+            if entier == 3:
+                self.nb_niveau += 1
+                self.game(niv + 1)
+            if entier == 4:
+                self.game_intro()
+            while entier == 5:
+                level = Niveau.Niveau(self.gameDisplay, self.liste_repartition[niv], self.liste_temps[niv])
+                entier = level.jouer()
+        else:
+            if entier == 1:
+                self.game_intro()
+            if entier == 2:
+                while entier == 2:
+                    level = Niveau.Niveau(self.gameDisplay, self.liste_repartition[niv], self.liste_temps[niv])
+                    entier = level.jouer()
+            if entier == 3:
+                self.game(niv + 1)
+            if entier == 4:
+                self.game_intro()
+            while entier == 5:
+                level = Niveau.Niveau(self.gameDisplay, self.liste_repartition[niv], self.liste_temps[niv])
+                entier = level.jouer()
+
+
 
 
     def quitgame(self):
 
+        print(self.nb_niveau)
+        a = self.nb_niveau
+        pygame.quit()
+        return(a)
+        
+    
+    def game_tuto(self):
+        
         pygame.quit()
 
-menu = Menu(3)
+        
+
+
