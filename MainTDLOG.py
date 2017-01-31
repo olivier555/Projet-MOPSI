@@ -54,7 +54,7 @@ def main():
 
 
     pygame.init()
-    fenetre = pygame.display.set_mode((800, 600))
+    fenetre = pygame.display.set_mode((600, 600))
     
     menu = Menu.Menu(actual_level, fenetre, liste_repartition, liste_temps, liste_score)
     t = menu.play()
@@ -64,6 +64,6 @@ def main():
         cursor.execute("""UPDATE score SET open = "TRUE" WHERE number = ? """, (lev,))
     
     for star in range(len(t[1])):
-        cursor.execute("""UPDATE score SET stars = ? WHERE number = ? """, (t[1][star], star,))
+        cursor.execute("""UPDATE score SET stars = ? WHERE number = ? """, (t[1][star], star + 1,))
     
     game.commit()
