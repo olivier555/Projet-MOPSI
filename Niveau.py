@@ -15,6 +15,7 @@ import MethodeNaive
 
 ## Fonctions outils
 
+
 def liste_perle(collier, rayon_perle, liste_positions):
     """Renvoit la liste contenant toutes les surfaces
     correspondant aux perles du collier et met a jour
@@ -146,9 +147,9 @@ class Niveau:
         self.liste_image_chrono = [Image.Image(Image.LISTE_CHRONO[0], 20, 20),
                                    Image.Image(Image.LISTE_CHRONO[1], 20, 20),
                                    Image.Image(Image.LISTE_CHRONO[2], 20, 20)]
-        self.prison = Image.Image("prison.png", taille, taille)
+        self.prison = Image.Image("prison.png", 800, 600)
         self.tresor = Image.Image("tresor.png", int(taille / 3), int(taille / 3))
-        self.fond = Image.Image("fond.gif", taille, taille)
+        self.fond = Image.Image("fond.gif", 800, 600)
         self.etoile = Image.Image("etoile.gif", 100, 100)
         self.liste_coquillages = []
         for i in range(self.collier.nb_types):
@@ -378,11 +379,11 @@ class Niveau:
                     elif niveau_reussi:
                         if position_clic[0] > 70 and position_clic[0] < 190:
                             if position_clic[1] > 500 and position_clic[1] < 550:
-                                sortie = 1
+                                sortie = 1 
                                 niveau_actif = False
                         if position_clic[0] > 240 and position_clic[0] < 360:
                             if position_clic[1] > 500 and position_clic[1] < 550:
-                                sortie = 2
+                                sortie = 2  
                                 niveau_actif = False
                         if position_clic[0] > 410 and position_clic[0] < 530:
                             if position_clic[1] > 500 and position_clic[1] < 550:
@@ -391,11 +392,11 @@ class Niveau:
                     else:
                         if position_clic[0] > 150 and position_clic[0] < 270:
                             if position_clic[1] > 500 and position_clic[1] < 550:
-                                sortie = 1
+                                sortie = 4
                                 niveau_actif = False
                         if position_clic[0] > 330 and position_clic[0] < 450:
                             if position_clic[1] > 500 and position_clic[1] < 550:
-                                sortie = 2
+                                sortie = 5
                                 niveau_actif = False
                         
                         
@@ -411,4 +412,5 @@ class Niveau:
 
             pygame.display.update()
 
-        return sortie
+        data = [sortie, self.nb_etoile]
+        return data
