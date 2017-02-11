@@ -113,6 +113,7 @@ class Level:
         self.necklace.necklace_repartition(repartition)
 
         self.time_level = time_level
+        self.lev_tot = 12
 
         self.window = window
 
@@ -352,7 +353,7 @@ class Level:
         self.window.blit(self.treasure.area, (200, 225))
         self.window.blit(self.txt_level_succed, self.txt_level_succed_rect)
         self.window.blit(self.button_level.area, (100, 500))
-        if self.number < 20:
+        if self.number < self.lev_tot:
             self.window.blit(self.button_new_level.area, (250, 500))
             self.window.blit(self.txt_new_level, self.txt_new_level_rect)
         self.window.blit(self.button_menu.area, (400, 500))
@@ -379,6 +380,7 @@ class Level:
         exit = 0
         level_active = True
 
+        pygame.mouse.set_visible(False)
         while level_active: # main game loop
 
             for event in pygame.event.get():
@@ -448,5 +450,6 @@ class Level:
 
             pygame.display.update()
 
+        pygame.mouse.set_visible(True)
         data = [exit, self.nb_star]
         return data

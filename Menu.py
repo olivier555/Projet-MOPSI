@@ -250,7 +250,8 @@ class Menu:
                     level = Level.Level(self.game_display, 
                     self.list_repartition[lev], self.list_time[lev], lev + 1)
 
-                    number = level.play()   
+                    data = level.play()
+                    number = data[0]   
 
             if number == 2 and lev != self.nb_level_tot - 1:
 
@@ -261,12 +262,14 @@ class Menu:
     
                 self.game_intro()
 
+            
             while number == 4:
 
                 level = Level.Level(self.game_display, 
                 self.list_repartition[lev], self.list_time[lev], lev + 1)
 
-                number = level.play()
+                data = level.play()
+                number = data[0]
         else:
 
             if number == 3:
@@ -280,7 +283,8 @@ class Menu:
                     level = Level.Level(self.game_display, 
                     self.list_repartition[lev], self.list_time[lev], lev + 1)
 
-                    number = level.play()
+                    data = level.play()
+                    number = data[0]
 
             if number == 2 and lev != self.nb_level_tot - 1:
 
@@ -295,7 +299,8 @@ class Menu:
                 level = Level.Level(self.game_display, 
                 self.list_repartition[lev], self.list_time[lev], lev)
 
-                number = level.play()
+                data = level.play()
+                number = data[0]
 
     def quitgame(self):
         """Quitte le menu"""
