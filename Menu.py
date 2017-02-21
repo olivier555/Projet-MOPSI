@@ -170,7 +170,7 @@ class Menu:
             HEIGHT / 2, 100)
 
             small_text = pygame.font.SysFont("mvboli", 50)
-            msg = " Deux petits POISSONS veulent se partager un MAGNIFIQUE collier de perles trouvé au fond de l'océan. Mais pour cela, ils ne disposent que d'un nombre limité de petits coquillages tranchants. Penses-tu pouvoir relever le défi avec que la police du fond de l'océan ne t'attrape toi et tes deux petits poisons ? !"
+            msg = " Deux petits POISSONS veulent se partager un MAGNIFIQUE collier de perles trouvé au fond de l'océan. Mais pour cela, ils ne disposent que d'un nombre limité de petits coquillages tranchants. Penses-tu pouvoir relever le défi avant que la police du fond de l'océan ne t'attrape toi et tes deux petits poisons ? !"
             text_surf, text_rect = text_objects(msg, small_text)
             text_rect.center = (300, 200)
             self.game_display.blit(text_surf, text_rect)
@@ -233,12 +233,23 @@ class Menu:
             if self.list_score[lev] < data[1]:
 
                 self.list_score[lev] = data[1]
-
+        
         if lev == self.nb_level - 1:
+
+            while number == 4:
+
+                level = Level.Level(self.game_display, 
+                self.list_repartition[lev], self.list_time[lev], lev + 1)
+
+                data = level.play()
+                number = data[0]
 
             if number == 3:
 
-                self.nb_level += 1
+                if self.nb_level < self.nb_level_tot :
+                
+                    self.nb_level += 1
+
                 self.game_intro()
                 
             if number == 1:
@@ -262,7 +273,8 @@ class Menu:
     
                 self.game_intro()
 
-            
+        else:
+
             while number == 4:
 
                 level = Level.Level(self.game_display, 
@@ -270,7 +282,6 @@ class Menu:
 
                 data = level.play()
                 number = data[0]
-        else:
 
             if number == 3:
     
@@ -294,13 +305,7 @@ class Menu:
 
                 self.game_intro()
 
-            while number == 4:
-
-                level = Level.Level(self.game_display, 
-                self.list_repartition[lev], self.list_time[lev], lev)
-
-                data = level.play()
-                number = data[0]
+        
 
     def quitgame(self):
         """Quitte le menu"""
